@@ -1,17 +1,30 @@
 class Hogar {
-  const nivelMugre 
+  var nivelMugre 
   const confort
 
   method esBuena(){
     return nivelMugre  <= confort / 2
   }
+
+  method efectoDelAtaque(unaPlaga){
+    nivelMugre = nivelMugre + unaPlaga.daño()
+    unaPlaga.ataque()
+  }
 }
 
 class Huerta{
-  const produccion
+  var produccion
 
   method esBuena(){
     return produccion > nivelMinimo.valor()
+  }
+  method efectoDelAtaque(unaPlaga){
+    var extra = 0
+     if(unaPlaga.transmiteEnfermedades()){
+      extra = 10
+     }
+    produccion = (produccion - (unaPlaga.daño() * 0.1 + extra)).max(0)
+    unaPlaga.ataque()
   }
 }
 
@@ -20,10 +33,17 @@ object nivelMinimo {
 }
 
 class Mascota{
-  const salud
+  var salud
   
   method esBuena(){
     return salud > 250
+  }
+
+  method efectoDelAtaque(unaPlaga){
+    if(unaPlaga.transmiteEnfermedades()){
+      salud = (salud - unaPlaga.daño()).max(0)
+      unaPlaga.ataque()
+    }
   }
 }
 
@@ -52,14 +72,17 @@ class Barrio{
 }
 
 class Plaga{
-  const poblacion
+  var poblacion
   method transmiteEnfermedades(){
     return poblacion >= 10
-  } 
+  }
+  method ataque() {
+    poblacion = poblacion + (poblacion*0.1)    
+  }
 }
 
 class Cucarachas inherits Plaga {
-    const pesoPromedio      
+    var pesoPromedio      
     
     method daño(){
       return poblacion / 2
@@ -67,6 +90,11 @@ class Cucarachas inherits Plaga {
 
     override method transmiteEnfermedades(){
       return super() and pesoPromedio >= 10
+    }
+
+    override method ataque(){
+      super()
+      pesoPromedio = pesoPromedio + 2
     }
 }
 
@@ -77,7 +105,9 @@ class Pulgas inherits Plaga {
 }
 
 class Garrapatas inherits Pulgas {   
-    
+    override method ataque(){
+      poblacion = poblacion + (poblacion*0.2)
+    }
 }
 
 class Mosquitos inherits Plaga {
@@ -89,3 +119,4 @@ class Mosquitos inherits Plaga {
       return poblacion % 3 == 0 and super()
     }    
 }
+
