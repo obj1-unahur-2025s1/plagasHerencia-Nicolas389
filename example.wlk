@@ -8,7 +8,6 @@ class Hogar {
 
   method efectoDelAtaque(unaPlaga){
     nivelMugre = nivelMugre + unaPlaga.daño()
-    unaPlaga.ataque()
   }
 }
 
@@ -24,7 +23,6 @@ class Huerta{
       extra = 10
      }
     produccion = (produccion - (unaPlaga.daño() * 0.1 + extra)).max(0)
-    unaPlaga.ataque()
   }
 }
 
@@ -42,8 +40,8 @@ class Mascota{
   method efectoDelAtaque(unaPlaga){
     if(unaPlaga.transmiteEnfermedades()){
       salud = (salud - unaPlaga.daño()).max(0)
-      unaPlaga.ataque()
     }
+
   }
 }
 
@@ -78,6 +76,10 @@ class Plaga{
   }
   method ataque() {
     poblacion = poblacion + (poblacion*0.1)    
+  }
+  method atacar(unElemento){
+    unElemento.efectoDelAtaque(self)
+    self.ataque()
   }
 }
 
